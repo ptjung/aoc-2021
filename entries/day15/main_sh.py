@@ -1,7 +1,4 @@
-from heapq import *
-from time import sleep
-
-INC_MAP = ((-1, 0, 1, 2, 3), (0, 1, 2, 3, 4), (1, 2, 3, 4, 5), (2, 3, 4, 5, 6), (3, 4, 5, 6, 7))
+from heapq import heapify, heappush, heappop
 
 def run_sum(arr):
     ret = []
@@ -12,6 +9,8 @@ def run_sum(arr):
     return ret
 
 def get_new_inp(inp):
+    INC_MAP = ((-1, 0, 1, 2, 3), (0, 1, 2, 3, 4), (1, 2, 3, 4, 5), (2, 3, 4, 5, 6), (3, 4, 5, 6, 7))
+
     inp_max_r, inp_max_c = len(inp), len(inp[0])
     ret = [[0 for _j in range(5 * inp_max_c)] for _i in range(5 * inp_max_r)]
     for r in range(len(ret)):
@@ -28,20 +27,19 @@ if __name__ == "__main__":
         inp_max_ir, inp_max_ic = inp_max_r - 1, inp_max_c - 1
 
         explored = set()
-        graph = [[float('inf')  for c in range(inp_max_c)] for r in range(inp_max_r)]
-        wheap = [(0, (0, 0)), *((float('inf'), (r, c)) for r in range(inp_max_r) for c in range(inp_max_c))]
-        heapify(wheap)
+        graph = [[float('inf') for c in range(inp_max_c)] for r in range(inp_max_r)]
+        heap = [(0, (0, 0))]
+        heapify(heap)
 
         def explore_node(node_val, r, c):
             if (r, c) not in explored and 0 <= r < inp_max_r and 0 <= c < inp_max_c:
                 new_val = min(graph[r][c], node_val + inp[r][c])
-                heappush(wheap, (new_val, (r, c)))
+                heappush(heap, (new_val, (r, c)))
                 graph[r][c] = new_val
                 explored.add((r, c))
 
-        while wheap:
-            nval, rc_pair = heappop(wheap)
-            r, c = rc_pair
+        while heap:
+            nval, (r, c) = heappop(heap)
             if r == inp_max_ir and c == inp_max_ic:
                 print(nval)
                 break
