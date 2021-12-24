@@ -7,7 +7,6 @@ def i(cond, x, y):
 
 @lru_cache(maxsize = None)
 def get_wins(pos_a, pos_b, score_a = 0, score_b = 0, player = False):
-    player_alt = not player
 
     if score_a >= SCORE_CAP:
         return 1, 0
@@ -15,12 +14,12 @@ def get_wins(pos_a, pos_b, score_a = 0, score_b = 0, player = False):
         return 0, 1
 
     wins_a, wins_b = 0, 0
+    player_alt = not player
     for steps in ROLL_SUMS:
         new_pos = (i(player, pos_b, pos_a) + steps - 1) % 10 + 1
         nxt_a, nxt_b = get_wins(i(player, pos_a, new_pos), i(player, new_pos, pos_b), score_a + new_pos * player_alt, score_b + new_pos * player, player_alt)
         wins_a += nxt_a
         wins_b += nxt_b
-
     return wins_a, wins_b
 
 if __name__ == "__main__":
